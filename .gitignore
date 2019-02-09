@@ -1,0 +1,3 @@
+# Don't track content of these folders
+scripts/API_key_secret/
+
