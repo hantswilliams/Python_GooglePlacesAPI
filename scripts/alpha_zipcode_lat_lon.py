@@ -19,7 +19,7 @@ to calculate distances
 import googlemaps
 from datetime import datetime
 
-gmaps = googlemaps.Client(key='AIzaSyAAUpHA4M1imsFxhSA01vAFuZkmDk-Fu5Y')
+gmaps = googlemaps.Client(key='XXXX')
 
 
 """
