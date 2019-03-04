@@ -75,7 +75,56 @@ df_tn = fileloader(location14)
 df_tx = fileloader(location15)
 
 
-df_ca_small = df_ca.head(25)
+
+df_allzips = pd.concat([
+        df_al, df_ar, df_az,
+        df_ca, df_fl, df_il,
+        df_ky, df_la, df_ms,
+        df_nc, df_ne, df_ny,
+        df_sc, df_tn, df_tx])
+
+
+
+def datalatlonapi(dataframe):
+    
+    intputdf = dataframe
+    list1 = intputdf['zipcode']
+    list2 = []   
+    
+    for i in list1:      
+        geocode_result = gmaps.geocode([i])
+        """ MAYBE HERE ADD IN IF filter(none,list2) != none, then do something"""
+        """this will get around the issue of the single missing value"""
+        list2.append(geocode_result)  
+    
+    list2 = list(filter(None, list2))
+
+    def pullingoutdata():
+        return_zip = [item[0]["address_components"][0]["long_name"] for item in list2]
+        return_lat = [item[0]["geometry"]["location"]["lat"] for item in list2]
+        return_lon = [item[0]["geometry"]["location"]["lng"] for item in list2]
+        df1 = pd.DataFrame({'Zipcode':return_zip})
+        df2 = pd.DataFrame({'Latitude':return_lat})
+        df3 = pd.DataFrame({'Longitude':return_lon})
+        final = df1.merge(df2, how='left', left_index=True, right_index=True)
+        final = final.merge(df3, how='left', left_index=True, right_index=True)
+        return final
+
+    final_list = pullingoutdata()
+    return final_list 
+
+
+
+pre_finaldf = datalatlonapi(df_allzips)
+pre_finaldf.to_pickle('/Users/hantswilliams/Dropbox/Biovirtua/Python_Projects/vh_zipcode/Python_GooglePlacesAPI/data_files/output/APIresult.pkl')
+
+
+
+
+
+
+
+
 
 
 
